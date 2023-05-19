@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model YuGiOhCard {
+  id               String               @id @default(uuid())
+  name             String               @unique
+  type             String
+  desc             String
+  star             Int
+  atk              Int
+  def              Int
+  extraDeck        Boolean              @default(false)
+  cardType         cardTypeEnum
+  monsterType      monsterTypeEnum
+  monsterSubType   monsterSubTypeEnum
+  monsterAttribute monsterAttributeEnum
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  cardSets         YuGiOhCardSet[]
+}
+
+model YuGiOhCardSet {
+  id        String       @id @default(uuid())
+  name      String
+  rarity    String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  cards     YuGiOhCard[]
+}
+
+enum cardTypeEnum {
+  MONSTER
+  SPELL
+  TRAP
+}
+
+enum monsterTypeEnum {
+  Aqua
+  Beast
+  BeastWarrior
+  Cyberse
+  Dinosaur
+  DivineBeast
+  Dragon
+  Fairy
+  Fiend
+  Fish
+  Insect
+  Machine
+  Plant
+  Psychic
+  Pyro
+  Reptile
+  Rock
+  SeaSerpent
+  Spellcaster
+  Thunder
+  Warrior
+  WingedBeast
+  Wyrm
+  Zombie
+}
+
+enum monsterSubTypeEnum {
+  Normal
+  Effect
+  Flip
+  Gemini
+  Pendulum
+  Spirit
+  Toon
+  Tuner
+  Union
+  Fusion
+  Synchro
+  Xyz
+  Link
+}
+
+enum monsterAttributeEnum {
+  Dark
+  Divine
+  Earth
+  Fire
+  Light
+  Water
+  Wind
+}
