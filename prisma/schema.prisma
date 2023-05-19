@@ -13,9 +13,8 @@ datasource db {
 model YuGiOhCard {
   id               String               @id @default(uuid())
   name             String               @unique
-  type             String
   desc             String
-  star             Int
+  level            Int
   atk              Int
   def              Int
   extraDeck        Boolean              @default(false)
@@ -25,17 +24,16 @@ model YuGiOhCard {
   monsterAttribute monsterAttributeEnum
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
-  cardSets         YuGiOhCardSet[]
 }
 
-model YuGiOhCardSet {
-  id        String       @id @default(uuid())
-  name      String
-  rarity    String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  cards     YuGiOhCard[]
-}
+// model YuGiOhCardSet {
+//   id        String       @id @default(uuid())
+//   name      String
+//   rarity    String
+//   createdAt DateTime     @default(now())
+//   updatedAt DateTime     @updatedAt
+//   cards     YuGiOhCard[]
+// }
 
 enum cardTypeEnum {
   MONSTER
