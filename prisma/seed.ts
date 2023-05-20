@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 async function main() {
-  const card = await prisma.yuGiOhCard.create({
+  const cardOne = await prisma.yuGiOhCard.create({
     data: {
       name: 'Dark Magician',
       level: 7,
@@ -16,7 +16,24 @@ async function main() {
       monsterAttribute: 'Dark',
     },
   });
-  console.log(card);
+  console.log(cardOne);
+
+  const cardTwo = await prisma.yuGiOhCard.create({
+    data: {
+      name: 'Blue-Eyes White Dragon',
+      level: 8,
+      desc: 'This legendary dragon is a powerful engine of destruction.',
+      atk: 3000,
+      def: 2500,
+      extraDeck: false,
+      cardType: 'MONSTER',
+      monsterType: 'Dragon',
+      monsterSubType: 'Normal',
+      monsterAttribute: 'Light',
+    },
+  });
+
+  console.log(cardTwo);
 }
 main()
   .then(async () => {
