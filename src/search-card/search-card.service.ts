@@ -6,11 +6,11 @@ import { YuGiOhCard } from '@prisma/client';
 export class SearchCardService {
   constructor(private prisma: PrismaService) {}
 
-  findAllCards(): Promise<YuGiOhCard[]> {
+  async findAllCards(): Promise<YuGiOhCard[]> {
     return this.prisma.yuGiOhCard.findMany();
   }
 
-  findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
+  async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
     return this.prisma.yuGiOhCard.findUnique({
       where: {
         name: name,
