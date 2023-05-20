@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { YuGiOhCard, YuGiOhCardImage } from '@prisma/client';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class SearchCardService {
@@ -26,5 +27,29 @@ export class SearchCardService {
         YuGiOhCardImage: true,
       },
     });
+  }
+
+  async getCardByNameId(cardNameId: YuGiOhCardImage['cardNameId']) {
+    return this.prisma.yuGiOhCardImage.findFirst({
+      where: {
+        cardNameId: cardNameId,
+      },
+    });
+  }
+
+  async returnCardInfo(
+    cardName: YuGiOhCard['name'],
+    cardInfo: YuGiOhCard,
+  ): Promise<YuGiOhCard> {
+    const name = await this.findCardByName(cardName);
+
+    if (name) {
+      return this.prisma.yuGiOhCard.findFirst({
+        where: {
+          name: cardName,
+          ...cardInfo,
+        },
+      });
+    }
   }
 }

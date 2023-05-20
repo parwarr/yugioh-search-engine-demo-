@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Res } from '@nestjs/common';
 import { SearchCardService } from './search-card.service';
-import { YuGiOhCard, YuGiOhCardImage } from '@prisma/client';
+import { Prisma, YuGiOhCard, YuGiOhCardImage } from '@prisma/client';
+import { Response } from 'express';
 
 @Controller('search-card')
 export class SearchCardController {
@@ -14,8 +15,26 @@ export class SearchCardController {
   @Get(':name')
   async findCardByName(
     @Param('name') name: YuGiOhCard['name'],
-    // image: YuGiOhCardImage['image'],
+    cardId: YuGiOhCard['id'],
+    NameId: YuGiOhCardImage['cardNameId'],
+    cardInfo: YuGiOhCard,
+    imageUrl: YuGiOhCardImage['image'],
+    @Res() res: Response,
   ): Promise<YuGiOhCard> {
-    return this.searchCardService.findCardByName(name);
+    const cardName = this.searchCardService.findCardByName(name);
+    if (cardName) {
+      const cardImg: any = res.sendFile(
+        `/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/images/Blue_Eyes_White_Dragon.jpeg`,
+      );
+      const cardInformation = await this.searchCardService.returnCardInfo(
+        name,
+        cardInfo,
+      );
+
+      if (cardInformation) {
+        console.log(cardInformation);
+        return cardInformation && cardImg;
+      }
+    }
   }
 }
