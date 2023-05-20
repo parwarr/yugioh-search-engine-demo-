@@ -11,8 +11,8 @@ export class SearchCardController {
     return this.searchCardService.findAllCards();
   }
 
-  @Get('name')
-  async findCardByName(name: YuGiOhCard['name']) {
+  @Get(':name')
+  async findCardByName(@Param('name') name: YuGiOhCard['name']) {
     return this.searchCardService.findCardByName(name);
   }
 }
