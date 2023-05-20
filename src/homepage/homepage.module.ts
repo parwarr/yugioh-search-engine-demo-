@@ -4,6 +4,6 @@ import { HomepageController } from './homepage.controller';
 
 @Module({
   controllers: [HomepageController],
-  providers: [HomepageService]
+  providers: [HomepageService],
 })
 export class HomepageModule {}

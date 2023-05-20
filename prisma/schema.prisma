@@ -24,16 +24,17 @@ model YuGiOhCard {
   monsterAttribute monsterAttributeEnum
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
+  YuGiOhCardImage  YuGiOhCardImage[]
 }
 
-// model YuGiOhCardSet {
-//   id        String       @id @default(uuid())
-//   name      String
-//   rarity    String
-//   createdAt DateTime     @default(now())
-//   updatedAt DateTime     @updatedAt
-//   cards     YuGiOhCard[]
-// }
+model YuGiOhCardImage {
+  id         String     @id @default(uuid())
+  cardName   YuGiOhCard @relation(fields: [cardNameId], references: [id])
+  cardNameId String     @default(uuid())
+  imageUrl   String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
 
 enum cardTypeEnum {
   MONSTER
