@@ -7,12 +7,12 @@ export class SearchCardController {
   constructor(private readonly searchCardService: SearchCardService) {}
 
   @Get()
-  findAllCards() {
+  async findAllCards() {
     return this.searchCardService.findAllCards();
   }
 
   @Get('name')
-  findCardByName(name: YuGiOhCard['name']) {
+  async findCardByName(name: YuGiOhCard['name']) {
     return this.searchCardService.findCardByName(name);
   }
 }
