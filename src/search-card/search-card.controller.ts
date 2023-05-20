@@ -23,6 +23,7 @@ export class SearchCardController {
   ): Promise<YuGiOhCard> {
     const cardName = this.searchCardService.findCardByName(name);
     if (cardName) {
+      // TODO - fix this
       const cardImg: any = res.sendFile(
         `/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/images/Blue_Eyes_White_Dragon.jpeg`,
       );
