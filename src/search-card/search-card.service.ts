@@ -15,10 +15,7 @@ export class SearchCardService {
     });
   }
 
-  async findCardByName(
-    name: YuGiOhCard['name'],
-    // image: YuGiOhCardImage['image'],
-  ): Promise<YuGiOhCard> {
+  async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
     return this.prisma.yuGiOhCard.findUnique({
       where: {
         name: name,
@@ -45,17 +42,25 @@ export class SearchCardService {
 
   async returnCardInfo(
     cardName: YuGiOhCard['name'],
-    cardInfo: YuGiOhCard,
+    imageUrl: YuGiOhCardImage['imageUrl'],
   ): Promise<YuGiOhCard> {
     const name = await this.findCardByName(cardName);
 
     if (name) {
       return this.prisma.yuGiOhCard.findFirst({
+        include: {
+          YuGiOhCardImage: true,
+        },
         where: {
           name: cardName,
-          ...cardInfo,
+          YuGiOhCardImage: {
+            some: {
+              imageUrl,
+            },
+          },
         },
       });
     }
+    return null;
   }
 }
