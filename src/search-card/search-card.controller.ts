@@ -23,18 +23,19 @@ export class SearchCardController {
   ): Promise<YuGiOhCard> {
     const cardName = await this.searchCardService.findCardByName(name);
     if (cardName) {
-      // TODO - fix this
       const cardInformation = await this.searchCardService.returnCardInfo(
         name,
         imageUrl,
       );
-      const absoluteImagePath = path.join(
-        __dirname,
-        '..',
-        'public',
-        cardInformation.imageUrl,
-      );
-      return res.sendFile(absoluteImagePath);
+      if (cardInformation && cardInformation.YuGiOhCardImage.length > 0) {
+        const absoluteImagePath = path.join(
+          __dirname,
+          '..',
+          'public',
+          cardInformation.YuGiOhCardImage[0].imageUrl,
+        );
+        return res.sendFile(absoluteImagePath);
+      }
     }
   }
 }
