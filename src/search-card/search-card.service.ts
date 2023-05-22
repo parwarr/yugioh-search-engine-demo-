@@ -29,10 +29,16 @@ export class SearchCardService {
     });
   }
 
-  async getCardByNameId(cardNameId: YuGiOhCardImage['cardNameId']) {
+  async getCardByNameId(
+    cardNameId: YuGiOhCardImage['cardNameId'],
+    imageUrl: YuGiOhCardImage['imageUrl'],
+  ) {
     return this.prisma.yuGiOhCardImage.findFirst({
       where: {
         cardNameId: cardNameId,
+        AND: {
+          imageUrl: imageUrl,
+        },
       },
     });
   }
