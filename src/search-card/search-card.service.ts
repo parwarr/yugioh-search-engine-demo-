@@ -7,8 +7,13 @@ import { Request, Response } from 'express';
 export class SearchCardService {
   constructor(private prisma: PrismaService) {}
 
-  async findAllCards(): Promise<YuGiOhCard[]> {
+  async findAllCards(query?: string): Promise<YuGiOhCard[]> {
     return this.prisma.yuGiOhCard.findMany({
+      where: {
+        name: {
+          contains: query,
+        },
+      },
       include: {
         YuGiOhCardImage: true,
       },
