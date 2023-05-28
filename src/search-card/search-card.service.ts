@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { YuGiOhCard, YuGiOhCardImage } from '@prisma/client';
-import { Request, Response } from 'express';
 
 @Injectable()
 export class SearchCardService {
@@ -23,7 +22,7 @@ export class SearchCardService {
   async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
     return this.prisma.yuGiOhCard.findUnique({
       where: {
-        name: name,
+        name,
       },
       include: {
         YuGiOhCardImage: true,
