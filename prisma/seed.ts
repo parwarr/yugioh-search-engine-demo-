@@ -14,6 +14,12 @@ async function main() {
       monsterType: 'Spellcaster',
       monsterSubType: 'Normal',
       monsterAttribute: 'Dark',
+      YuGiOhCardImage: {
+        create: {
+          imageUrl:
+            '/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/public/dark_magician.jpeg',
+        },
+      },
     },
   });
   console.log(cardOne);
@@ -30,6 +36,12 @@ async function main() {
       monsterType: 'Dragon',
       monsterSubType: 'Normal',
       monsterAttribute: 'Light',
+      YuGiOhCardImage: {
+        create: {
+          imageUrl:
+            '/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/public/Blue_Eyes_White_Dragon.jpeg',
+        },
+      },
     },
   });
 
