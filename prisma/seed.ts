@@ -46,6 +46,27 @@ async function main() {
   });
 
   console.log(cardTwo);
+
+  const cardThree = await prisma.yuGiOhCard.create({
+    data: {
+      name: 'Red-Eyes Black Dragon',
+      level: 7,
+      desc: 'A ferocious dragon with a deadly attack.',
+      atk: 2400,
+      def: 2000,
+      extraDeck: false,
+      cardType: 'MONSTER',
+      monsterType: 'Dragon',
+      monsterSubType: 'Normal',
+      monsterAttribute: 'Dark',
+      YuGiOhCardImage: {
+        create: {
+          imageUrl:
+            '/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/public/red_eyes_black_dragon.jpeg',
+        },
+      },
+    },
+  });
 }
 main()
   .then(async () => {
