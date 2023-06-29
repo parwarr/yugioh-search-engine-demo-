@@ -13,7 +13,7 @@ export class SearchCardController {
   ) {}
 
   @Get()
-  async findAllCards(query?) {
+  async findAllCards(query) {
     return this.searchCardService.findAllCards(query);
   }
 
