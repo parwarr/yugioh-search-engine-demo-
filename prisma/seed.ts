@@ -59,7 +59,7 @@ async function main() {
       YuGiOhCardImage: {
         create: {
           imageUrl:
-            '/Users/taapaha6/Documents/dev/Yu-Gi-Oh-searchEngine/search-engine/public/red_eyes_black_dragon.jpeg',
+            'C:/Users/parwar/Documents/dev/yugioh-search-engine-demo-/public/red_eyes_black_dragon.jpeg',
         },
       },
     },
