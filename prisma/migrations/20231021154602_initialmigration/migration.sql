@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `YuGiOhCard` (
+CREATE TABLE `yugioh_card` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `desc` VARCHAR(191) NOT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE `YuGiOhCard` (
     `updatedAt` DATETIME(3) NOT NULL,
     `s3_file_id` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `YuGiOhCard_name_key`(`name`),
-    UNIQUE INDEX `YuGiOhCard_s3_file_id_key`(`s3_file_id`),
+    UNIQUE INDEX `yugioh_card_name_key`(`name`),
+    UNIQUE INDEX `yugioh_card_s3_file_id_key`(`s3_file_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -35,4 +35,4 @@ CREATE TABLE `s3_file` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `YuGiOhCard` ADD CONSTRAINT `YuGiOhCard_s3_file_id_fkey` FOREIGN KEY (`s3_file_id`) REFERENCES `s3_file`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `yugioh_card` ADD CONSTRAINT `yugioh_card_s3_file_id_fkey` FOREIGN KEY (`s3_file_id`) REFERENCES `s3_file`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
