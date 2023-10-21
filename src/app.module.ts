@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { SearchCardModule } from './search-card/search-card.module';
-// import { FileController } from './streaming-file/streaming-file.controller';
+import { S3Module } from './s3/s3.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PrismaModule, SearchCardModule],
-  controllers: [],
-  providers: [],
+  imports: [PrismaModule, SearchCardModule, S3Module, ConfigModule.forRoot({isGlobal: true})],
 })
 export class AppModule {}

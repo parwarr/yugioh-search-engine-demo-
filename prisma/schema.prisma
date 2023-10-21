@@ -19,21 +19,35 @@ model YuGiOhCard {
   def              Int
   extraDeck        Boolean              @default(false)
   cardType         cardTypeEnum
-  monsterType      monsterTypeEnum
-  monsterSubType   monsterSubTypeEnum
-  monsterAttribute monsterAttributeEnum
+  monsterType      monsterTypeEnum?
+  monsterSubType   monsterSubTypeEnum?
+  monsterAttribute monsterAttributeEnum?
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
-  YuGiOhCardImage  YuGiOhCardImage[]
+  s3FileId         String               @unique @map("s3_file_id")
+  s3File           S3File               @relation(fields: [s3FileId], references: [id])
 }
 
-model YuGiOhCardImage {
-  id         String     @id @default(uuid())
-  cardName   YuGiOhCard @relation(fields: [cardNameId], references: [id])
-  cardNameId String     @default(uuid())
-  imageUrl   String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+// model YuGiOhCardImage {
+//   id         String     @id @default(uuid())
+//   cardName   YuGiOhCard @relation(fields: [cardNameId], references: [id])
+//   cardNameId String     @default(uuid())
+//   imageUrl   String
+//   createdAt  DateTime   @default(now())
+//   updatedAt  DateTime   @updatedAt
+// }
+
+model S3File {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  s3FileKey    String   @unique @map("s3_file_key") @db.VarChar(255)
+  s3Bucket     String   @map("s3_bucket") @db.VarChar(255)
+  originalName String   @map("original_name") @db.VarChar(255)
+  mimeType     String   @map("mime_type") @db.VarChar(255)
+  yuGiOhCard   YuGiOhCard? 
+
+  @@map("s3_file")
 }
 
 enum cardTypeEnum {
