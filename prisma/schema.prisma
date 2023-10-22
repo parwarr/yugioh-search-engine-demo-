@@ -10,6 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO: Add User model here
+
 model YuGiOhCard {
   id               String               @id @default(uuid())
   name             String               @unique

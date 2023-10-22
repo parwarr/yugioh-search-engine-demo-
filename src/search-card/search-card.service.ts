@@ -9,7 +9,6 @@ import { CreateCardDto } from './dto/create-card.dto';
 export class SearchCardService {
   constructor(
     private prismaService: PrismaService,
-    private readonly configService: ConfigService,
     private s3Service: S3Service,
   ) {}
 
@@ -24,7 +23,13 @@ export class SearchCardService {
 
           await tx.yuGiOhCard.create({
             data: {
-              ...data,
+              name: data.name,
+              desc: data.desc,
+              level: parseInt(data.level.toString()),
+              atk: parseInt(data.atk.toString()),
+              def: parseInt(data.def.toString()),
+              extraDeck: data.extraDeck ? true : false,
+              cardType: data.cardType,
               s3File: {
                 connect: {
                   id: s3File.id,
@@ -34,19 +39,60 @@ export class SearchCardService {
           });
         },
       );
-      return;
-    } catch (error) {}
+      return data;
+    } catch (error) {
+      console.error('Error in transaction:', error);
+      throw new Error('An error occurred during the transaction.');
+    }
   }
 
   async findAllCards(): Promise<YuGiOhCard[]> {
-    return this.prismaService.yuGiOhCard.findMany({});
+    const card = await this.prismaService.yuGiOhCard.findMany({
+      include: {
+        s3File: true,
+      },
+    }).then((cards) => {
+      return Promise.all(
+        cards.map(async (card) => {
+          const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+            bucket: card.s3File.s3Bucket,
+            fileKey: card.s3File.s3FileKey,
+          });
+
+          return {
+            ...card,
+            cardImagePresignedUrl,
+          };
+        }),
+      );
+    });
+    return card;
   }
 
-  async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
-    return this.prismaService.yuGiOhCard.findUnique({
+  async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard & { cardImagePresignedUrl: string }> {
+    const card = await this.prismaService.yuGiOhCard.findUnique({
       where: {
         name,
       },
+      include: {
+        s3File: true,
+      },
     });
+
+    if (card) {
+      const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+        bucket: card.s3File.s3Bucket,
+        fileKey: card.s3File.s3FileKey,
+      }) 
+
+      
+
+      return {
+        ...card,
+        cardImagePresignedUrl,
+      };
+    } else {
+      throw new Error('Card not found');
+    }
   }
 }

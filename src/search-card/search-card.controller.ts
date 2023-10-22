@@ -1,39 +1,55 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { SearchCardService } from './search-card.service';
 import { YuGiOhCard } from '@prisma/client';
-import { ApiConsumes, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateCardDto } from './dto/create-card.dto';
 
-@Controller('card')
+@Controller()
+@ApiTags('cards')
 export class SearchCardController {
   constructor(private readonly searchCardService: SearchCardService) {}
 
   // TODO: Only allow admins to upload files and create cards
   @Post()
   @ApiOperation({
-    summary: 'Create a new card',
-    description: 'The post endpoint is used to create a new card',
+    summary: 'Create Card',
+    description: 'The create function is used to create a new card',
+  })
+  @ApiBody({
+    type: CreateCardDto,
   })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  async createCard(
+  async createScreen(
     @Body() data: CreateCardDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })],
+      }),
+    )
+    file: Express.Multer.File,
   ): Promise<CreateCardDto> {
-    console.log(data);
     return this.searchCardService.createCard(data, file);
   }
 
+
   @Get()
+  @ApiOperation({
+    summary: 'Get all cards',
+    description: 'The get endpoint is used to get all cards',
+  })
   async findAllCards() {
     return this.searchCardService.findAllCards();
   }
@@ -48,7 +64,7 @@ export class SearchCardController {
     description: 'The name of the card',
     type: String,
   })
-  async findCardByName(@Param('name') name: YuGiOhCard['name']) {
+  async findCardByName(@Param('name') name: YuGiOhCard['name']): Promise<YuGiOhCard & { cardImagePresignedUrl: string }> {
     return this.searchCardService.findCardByName(name);
   }
 }
