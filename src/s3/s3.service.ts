@@ -26,7 +26,7 @@ export class S3Service {
       region: this.configService.getOrThrow('S3_REGION'),
       endpoint: this.configService.getOrThrow('S3_HOST'),
       forcePathStyle: true,
-      credentials: { 
+      credentials: {
         accessKeyId: this.configService.getOrThrow('S3_ACCESS_KEY'),
         secretAccessKey: this.configService.getOrThrow('S3_SHARED_SECRET'),
       },
@@ -61,7 +61,7 @@ export class S3Service {
       return createFile;
     } catch (error) {
       console.error(error);
-      throw new Error('An error occurred during file upload.'); 
+      throw new Error('An error occurred during file upload.');
     }
   }
 

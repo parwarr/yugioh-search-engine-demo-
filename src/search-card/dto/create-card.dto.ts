@@ -11,12 +11,9 @@ import {
   IsBoolean,
   IsEnum,
   IsNotEmpty,
-
   IsNumber,
-
   IsOptional,
   IsString,
-
 } from 'class-validator';
 
 export class CreateCardDto {
@@ -30,7 +27,12 @@ export class CreateCardDto {
   @IsString()
   desc: string;
 
-  @ApiProperty({ description: 'The level of the card', type: 'number', minLength: 1, maxLength: 12 })
+  @ApiProperty({
+    description: 'The level of the card',
+    type: 'number',
+    minLength: 1,
+    maxLength: 12,
+  })
   @IsNotEmpty()
   @IsNumber()
   level: number;
@@ -45,12 +47,20 @@ export class CreateCardDto {
   @IsNumber()
   def: number;
 
-  @ApiProperty({ description: 'If the card is an extra deck monster', type: 'boolean', default: false })
+  @ApiProperty({
+    description: 'If the card is an extra deck monster',
+    type: 'boolean',
+    default: false,
+  })
   @IsNotEmpty()
   @IsBoolean()
   extraDeck: boolean;
 
-  @ApiProperty({ description: 'The type of the card', enum: cardTypeEnum, required: true })
+  @ApiProperty({
+    description: 'The type of the card',
+    enum: cardTypeEnum,
+    required: true,
+  })
   @IsNotEmpty()
   @IsEnum(cardTypeEnum, { message: 'Invalid card type' })
   cardType: cardTypeEnum;
@@ -82,14 +92,13 @@ export class CreateCardDto {
   @IsEnum(monsterAttributeEnum, { message: 'Invalid monster attribute' })
   monsterAttribute?: monsterAttributeEnum;
 
-
   @ApiProperty({
     description: 'The file to upload',
     type: 'string',
     format: 'binary',
     required: true,
   })
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @Type(() => File)
   file: File;
 }
