@@ -39,14 +39,47 @@ export class SearchCardService {
   }
 
   async findAllCards(): Promise<YuGiOhCard[]> {
-    return this.prismaService.yuGiOhCard.findMany({});
+    const cards = await this.prismaService.yuGiOhCard.findMany({
+      include: {
+        s3File: true,
+      },
+    });
+
+    const cardsWithPresignedUrls = await Promise.all(
+      cards.map(async (card) => {
+        const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+          bucket: card.s3File.s3Bucket,
+          fileKey: card.s3File.s3FileKey,
+        });
+        return {
+          ...card,
+          cardImagePresignedUrl,
+        };
+      }),
+    );
+    return cardsWithPresignedUrls;
   }
 
-  async findCardByName(name: YuGiOhCard['name']): Promise<YuGiOhCard> {
-    return this.prismaService.yuGiOhCard.findUnique({
+  async findCardByName(
+    name: YuGiOhCard['name'],
+  ): Promise<YuGiOhCard & { cardImagePresignedUrl?: string }> {
+    const card = await this.prismaService.yuGiOhCard.findUnique({
       where: {
         name,
       },
+      include: {
+        s3File: true,
+      },
     });
+
+    const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+      bucket: card.s3File.s3Bucket,
+      fileKey: card.s3File.s3FileKey,
+    });
+
+    return {
+      ...card,
+      cardImagePresignedUrl,
+    };
   }
 }

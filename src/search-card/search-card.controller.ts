@@ -29,12 +29,15 @@ export class SearchCardController {
     @Body() data: CreateCardDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<CreateCardDto> {
-    console.log(data);
     return this.searchCardService.createCard(data, file);
   }
 
   @Get()
-  async findAllCards() {
+  @ApiOperation({
+    summary: 'Get all cards',
+    description: 'The get endpoint is used to get all cards',
+  })
+  async findAllCards(): Promise<YuGiOhCard[]> {
     return this.searchCardService.findAllCards();
   }
 
@@ -48,7 +51,9 @@ export class SearchCardController {
     description: 'The name of the card',
     type: String,
   })
-  async findCardByName(@Param('name') name: YuGiOhCard['name']) {
+  async findCardByName(
+    @Param('name') name: YuGiOhCard['name'],
+  ): Promise<YuGiOhCard> {
     return this.searchCardService.findCardByName(name);
   }
 }
