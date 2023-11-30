@@ -98,7 +98,6 @@ export class CreateCardDto {
     format: 'binary',
     required: true,
   })
-  // @IsNotEmpty()
   @Type(() => File)
   file: File;
 }

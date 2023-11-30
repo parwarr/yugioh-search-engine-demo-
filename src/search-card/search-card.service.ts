@@ -47,33 +47,30 @@ export class SearchCardService {
   }
 
   async findAllCards(): Promise<YuGiOhCard[]> {
-    const card = await this.prismaService.yuGiOhCard
-      .findMany({
-        include: {
-          s3File: true,
-        },
-      })
-      .then((cards) => {
-        return Promise.all(
-          cards.map(async (card) => {
-            const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
-              bucket: card.s3File.s3Bucket,
-              fileKey: card.s3File.s3FileKey,
-            });
+    const cards = await this.prismaService.yuGiOhCard.findMany({
+      include: {
+        s3File: true,
+      },
+    });
 
-            return {
-              ...card,
-              cardImagePresignedUrl,
-            };
-          }),
-        );
-      });
-    return card;
+    const cardsWithPresignedUrls = await Promise.all(
+      cards.map(async (card) => {
+        const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+          bucket: card.s3File.s3Bucket,
+          fileKey: card.s3File.s3FileKey,
+        });
+        return {
+          ...card,
+          cardImagePresignedUrl,
+        };
+      }),
+    );
+    return cardsWithPresignedUrls;
   }
 
   async findCardByName(
     name: YuGiOhCard['name'],
-  ): Promise<YuGiOhCard & { cardImagePresignedUrl: string }> {
+  ): Promise<YuGiOhCard & { cardImagePresignedUrl?: string }> {
     const card = await this.prismaService.yuGiOhCard.findUnique({
       where: {
         name,
@@ -83,18 +80,14 @@ export class SearchCardService {
       },
     });
 
-    if (card) {
-      const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
-        bucket: card.s3File.s3Bucket,
-        fileKey: card.s3File.s3FileKey,
-      });
+    const cardImagePresignedUrl = await this.s3Service.getPresignedUrl({
+      bucket: card.s3File.s3Bucket,
+      fileKey: card.s3File.s3FileKey,
+    });
 
-      return {
-        ...card,
-        cardImagePresignedUrl,
-      };
-    } else {
-      throw new Error('Card not found');
-    }
+    return {
+      ...card,
+      cardImagePresignedUrl,
+    };
   }
 }

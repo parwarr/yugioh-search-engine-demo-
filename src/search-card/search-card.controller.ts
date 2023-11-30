@@ -50,7 +50,7 @@ export class SearchCardController {
     summary: 'Get all cards',
     description: 'The get endpoint is used to get all cards',
   })
-  async findAllCards() {
+  async findAllCards(): Promise<YuGiOhCard[]> {
     return this.searchCardService.findAllCards();
   }
 
@@ -64,7 +64,9 @@ export class SearchCardController {
     description: 'The name of the card',
     type: String,
   })
-  async findCardByName(@Param('name') name: YuGiOhCard['name']): Promise<YuGiOhCard & { cardImagePresignedUrl: string }> {
+  async findCardByName(
+    @Param('name') name: YuGiOhCard['name'],
+  ): Promise<YuGiOhCard> {
     return this.searchCardService.findCardByName(name);
   }
 }
