@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { YuGiOhCard } from '@prisma/client';
-import { ConfigService } from '@nestjs/config';
 import { S3Service } from 'src/s3/s3.service';
 import { CreateCardDto } from './dto/create-card.dto';
 
@@ -28,7 +27,7 @@ export class SearchCardService {
               level: parseInt(data.level.toString()),
               atk: parseInt(data.atk.toString()),
               def: parseInt(data.def.toString()),
-              extraDeck: data.extraDeck ? true : false,
+              extraDeck: data.extraDeck,
               cardType: data.cardType,
               s3File: {
                 connect: {

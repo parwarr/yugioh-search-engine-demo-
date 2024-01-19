@@ -1,20 +1,19 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   FileTypeValidator,
   Get,
-  Param,
   ParseFilePipe,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { SearchCardService } from './search-card.service';
-import { YuGiOhCard } from '@prisma/client';
-import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { YuGiOhCard } from '@prisma/client';
 import { CreateCardDto } from './dto/create-card.dto';
+import { SearchCardService } from './search-card.service';
 
 @Controller()
 @ApiTags('cards')
@@ -44,8 +43,7 @@ export class SearchCardController {
     return this.searchCardService.createCard(data, file);
   }
 
-
-  @Get()
+  @Get('Cards')
   @ApiOperation({
     summary: 'Get all cards',
     description: 'The get endpoint is used to get all cards',
@@ -54,19 +52,12 @@ export class SearchCardController {
     return this.searchCardService.findAllCards();
   }
 
-  @Get('/:name')
+  @Get('name')
   @ApiOperation({
     summary: 'Get one card by name',
     description: 'The get endpoint is used to get one card by its name',
   })
-  @ApiParam({
-    name: 'name',
-    description: 'The name of the card',
-    type: String,
-  })
-  async findCardByName(
-    @Param('name') name: YuGiOhCard['name'],
-  ): Promise<YuGiOhCard> {
+  async findCardByName(@Query('name') name: string): Promise<YuGiOhCard> {
     return this.searchCardService.findCardByName(name);
   }
 }
