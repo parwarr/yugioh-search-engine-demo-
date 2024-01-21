@@ -3,12 +3,12 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3File } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class S3Service {
@@ -33,12 +33,12 @@ export class S3Service {
     });
   }
 
-  async uploadFile(
-    file: Express.Multer.File,
-    tx?: Partial<PrismaService>,
-  ): Promise<S3File> {
+  async uploadFile(file: Express.Multer.File): Promise<S3File[]> {
+    if (!file || !file.buffer) {
+      throw new Error('Invalid file object or missing buffer property.');
+    }
+
     const fileKey = randomUUID();
-    const prismaService = tx || this.prismaService;
 
     try {
       await this.s3Client.send(
@@ -49,7 +49,7 @@ export class S3Service {
         }),
       );
 
-      const createFile = await prismaService.s3File.create({
+      await this.prismaService.s3File.create({
         data: {
           s3Bucket: this.configService.getOrThrow('S3_BUCKET'),
           s3FileKey: fileKey,
@@ -58,10 +58,13 @@ export class S3Service {
         },
       });
 
-      return createFile;
+      return await this.prismaService.s3File.findMany({
+        where: {
+          s3FileKey: fileKey,
+        },
+      });
     } catch (error) {
-      console.error(error);
-      throw new Error('An error occurred during file upload.');
+      throw error;
     }
   }
 

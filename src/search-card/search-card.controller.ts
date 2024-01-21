@@ -1,16 +1,5 @@
-import {
-  Body,
-  Controller,
-  FileTypeValidator,
-  Get,
-  ParseFilePipe,
-  Post,
-  Query,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { YuGiOhCard } from '@prisma/client';
 import { CreateCardDto } from './dto/create-card.dto';
 import { SearchCardService } from './search-card.service';
@@ -29,18 +18,8 @@ export class SearchCardController {
   @ApiBody({
     type: CreateCardDto,
   })
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file'))
-  async createScreen(
-    @Body() data: CreateCardDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })],
-      }),
-    )
-    file: Express.Multer.File,
-  ): Promise<CreateCardDto> {
-    return this.searchCardService.createCard(data, file);
+  async createScreen(@Body() data: CreateCardDto): Promise<CreateCardDto> {
+    return this.searchCardService.createCard(data);
   }
 
   @Get('Cards')

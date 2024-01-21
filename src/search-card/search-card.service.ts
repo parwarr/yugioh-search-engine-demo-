@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { YuGiOhCard } from '@prisma/client';
 import { S3Service } from 'src/s3/s3.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateCardDto } from './dto/create-card.dto';
 
 @Injectable()
@@ -11,33 +11,26 @@ export class SearchCardService {
     private s3Service: S3Service,
   ) {}
 
-  async createCard(
-    data: CreateCardDto,
-    file: Express.Multer.File,
-  ): Promise<CreateCardDto> {
+  async createCard(data: CreateCardDto): Promise<CreateCardDto> {
     try {
-      await this.prismaService.$transaction(
-        async (tx: Partial<PrismaService>): Promise<void> => {
-          const s3File = await this.s3Service.uploadFile(file, tx);
-
-          await tx.yuGiOhCard.create({
-            data: {
-              name: data.name,
-              desc: data.desc,
-              level: parseInt(data.level.toString()),
-              atk: parseInt(data.atk.toString()),
-              def: parseInt(data.def.toString()),
-              extraDeck: data.extraDeck,
-              cardType: data.cardType,
-              s3File: {
-                connect: {
-                  id: s3File.id,
-                },
-              },
+      await this.prismaService.yuGiOhCard.create({
+        data: {
+          name: data.name,
+          desc: data.desc,
+          atk: data.atk,
+          def: data.def,
+          extraDeck: data.extraDeck,
+          monsterType: data.monsterType,
+          monsterAttribute: data.monsterAttribute,
+          level: data.level,
+          cardType: data.cardType,
+          s3File: {
+            connect: {
+              id: data.s3FileId,
             },
-          });
+          },
         },
-      );
+      });
       return data;
     } catch (error) {
       console.error('Error in transaction:', error);

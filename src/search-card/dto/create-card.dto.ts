@@ -5,8 +5,6 @@ import {
   monsterSubTypeEnum,
   monsterTypeEnum,
 } from '@prisma/client';
-import { File } from 'buffer';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEnum,
@@ -93,11 +91,12 @@ export class CreateCardDto {
   monsterAttribute?: monsterAttributeEnum;
 
   @ApiProperty({
-    description: 'The file to upload',
+    description: 'The image file',
     type: 'string',
     format: 'binary',
-    required: true,
+    required: false,
   })
-  @Type(() => File)
-  file: File;
+  @IsOptional()
+  @IsString()
+  s3FileId?: string;
 }
