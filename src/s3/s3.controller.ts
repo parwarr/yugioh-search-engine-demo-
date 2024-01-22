@@ -45,7 +45,8 @@ export class S3Controller {
   ) {
     try {
       await this.s3Service.uploadFile(file);
-      return res.status(201).json({ message: 'Image uploaded successfully' });
+
+      return res.status(200).json({ message: 'Image uploaded successfully' });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Failed to upload image' });

@@ -46,6 +46,7 @@ export class S3Service {
           Bucket: this.configService.getOrThrow('S3_BUCKET'),
           Key: fileKey,
           Body: file.buffer,
+          ContentType: file.mimetype,
         }),
       );
 
