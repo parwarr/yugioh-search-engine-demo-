@@ -13,34 +13,34 @@ datasource db {
 // TODO: Add User model here
 
 model YuGiOhCard {
-  id               String               @id @default(uuid())
-  name             String               @unique
+  id               String                @id @default(uuid())
+  name             String                @unique
   desc             String
   level            Int
   atk              Int
   def              Int
-  extraDeck        Boolean              @default(false)
+  extraDeck        Boolean               @default(false)
   cardType         cardTypeEnum
   monsterType      monsterTypeEnum?
   monsterSubType   monsterSubTypeEnum?
   monsterAttribute monsterAttributeEnum?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  s3FileId         String               @unique @map("s3_file_id")
-  s3File           S3File               @relation(fields: [s3FileId], references: [id])
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  s3FileId         String                @unique @map("s3_file_id")
+  s3File           S3File                @relation(fields: [s3FileId], references: [id])
 
   @@map("yugioh_card")
 }
 
 model S3File {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  s3FileKey    String   @unique @map("s3_file_key") @db.VarChar(255)
-  s3Bucket     String   @map("s3_bucket") @db.VarChar(255)
-  originalName String   @map("original_name") @db.VarChar(255)
-  mimeType     String   @map("mime_type") @db.VarChar(255)
-  yuGiOhCard   YuGiOhCard? 
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  s3FileKey    String      @unique @map("s3_file_key") @db.VarChar(255)
+  s3Bucket     String      @map("s3_bucket") @db.VarChar(255)
+  originalName String      @map("original_name") @db.VarChar(255)
+  mimeType     String      @map("mime_type") @db.VarChar(255)
+  yuGiOhCard   YuGiOhCard?
 
   @@map("s3_file")
 }

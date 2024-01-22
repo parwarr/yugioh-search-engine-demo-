@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
-import { SearchCardModule } from './search-card/search-card.module';
-import { S3Module } from './s3/s3.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
+import { S3Module } from './s3/s3.module';
+import { SearchCardModule } from './search-card/search-card.module';
 
 @Module({
   imports: [
